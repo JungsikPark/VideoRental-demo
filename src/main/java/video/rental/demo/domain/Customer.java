@@ -97,10 +97,10 @@ public class Customer {
 		result += "Total charge: " + totalCharge + "\tTotal Point:" + totalPoint + "\n";
 
 		if (totalPoint >= 10) {
-			System.out.println("Congrat! You earned one free coupon");
+			result += "Congrat! You earned one free coupon\n";
 		}
 		if (totalPoint >= 30) {
-			System.out.println("Congrat! You earned two free coupon");
+			result += "Congrat! You earned two free coupon\n";
 		}
 		return result;
 	}
