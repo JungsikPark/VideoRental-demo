@@ -44,9 +44,13 @@ public class Customer {
 	public List<Rental> getRentals() {
 		return rentals;
 	}
+	
+	public void addRental(Rental rental) {
+		rentals.add(rental);
+	}
 
-	public void setRentals(List<Rental> rentals) {
-		this.rentals = rentals;
+	public void clearRental() {
+		rentals.clear();
 	}
 
 	public String getReport() {

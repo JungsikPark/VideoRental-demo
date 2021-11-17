@@ -21,7 +21,7 @@ public class Interactor {
 	public String clearRentals(int customerCode) {
 		StringBuilder builder = new StringBuilder();
 		
-		Customer foundCustomer = getRepository().findCustomerById(customerCode);
+		Customer foundCustomer = repository.findCustomerById(customerCode);
 	
 		if (foundCustomer == null) {
 			builder.append("No customer found\n");
@@ -33,17 +33,16 @@ public class Interactor {
 				builder.append("\tPrice Code: " + rental.getVideo().getPriceCode());
 			}
 	
-			List<Rental> rentals = new ArrayList<Rental>();
-			foundCustomer.setRentals(rentals);
+			foundCustomer.clearRental();
 	
-			getRepository().saveCustomer(foundCustomer);
+			repository.saveCustomer(foundCustomer);
 		}
 		
 		return builder.toString();
 	}
 
 	public void returnVideo(int customerCode, String videoTitle) {
-		Customer foundCustomer = getRepository().findCustomerById(customerCode);
+		Customer foundCustomer = repository.findCustomerById(customerCode);
 		if (foundCustomer == null)
 			return;
 	
@@ -53,18 +52,18 @@ public class Interactor {
 			if (rental.getVideo().getTitle().equals(videoTitle) && rental.getVideo().isRented()) {
 				Video video = rental.returnVideo();
 				video.setRented(false);
-				getRepository().saveVideo(video);
+				repository.saveVideo(video);
 				break;
 			}
 		}
 	
-		getRepository().saveCustomer(foundCustomer);
+		repository.saveCustomer(foundCustomer);
 	}
 
 	public String listVideos() {
 		StringBuilder builder = new StringBuilder();
 		
-		List<Video> videos = getRepository().findAllVideos();
+		List<Video> videos = repository.findAllVideos();
 	
 		for (Video video : videos) {
 			builder.append(
@@ -79,7 +78,7 @@ public class Interactor {
 
 	public String listCustomers() {
 		StringBuilder builder = new StringBuilder();
-		List<Customer> customers = getRepository().findAllCustomers();
+		List<Customer> customers = repository.findAllCustomers();
 	
 		for (Customer customer : customers) {
 			builder.append("ID: " + customer.getCode() + "\nName: " + customer.getName() + "\tRentals: "
@@ -95,7 +94,7 @@ public class Interactor {
 
 	public String getCustomerReposrt(int code) {
 		StringBuilder builder = new StringBuilder();
-		Customer foundCustomer = getRepository().findCustomerById(code);
+		Customer foundCustomer = repository.findCustomerById(code);
 	
 		if (foundCustomer == null) {
 			builder.append("No customer found\n");
@@ -107,11 +106,11 @@ public class Interactor {
 	}
 
 	public void rentVideo(int code, String videoTitle) {
-		Customer foundCustomer = getRepository().findCustomerById(code);
+		Customer foundCustomer = repository.findCustomerById(code);
 		if (foundCustomer == null)
 			return;
 	
-		Video foundVideo = getRepository().findVideoByTitle(videoTitle);
+		Video foundVideo = repository.findVideoByTitle(videoTitle);
 	
 		if (foundVideo == null)
 			return;
@@ -121,8 +120,8 @@ public class Interactor {
 	
 		Boolean status = foundVideo.rentFor(foundCustomer);
 		if (status == true) {
-			getRepository().saveVideo(foundVideo);
-			getRepository().saveCustomer(foundCustomer);
+			repository.saveVideo(foundVideo);
+			repository.saveCustomer(foundCustomer);
 		} else {
 			return;
 		}
@@ -130,7 +129,7 @@ public class Interactor {
 
 	public void registerCustomer(String name, int code, String dateOfBirth) {
 		Customer customer = new Customer(code, name, LocalDate.parse(dateOfBirth));
-		getRepository().saveCustomer(customer);
+		repository.saveCustomer(customer);
 	}
 
 	public void registerVideo(String title, int videoType, int priceCode, int videoRating, LocalDate registeredDate) {
@@ -142,12 +141,6 @@ public class Interactor {
 		
 		Video video = new Video(title, videoType, priceCode, rating, registeredDate);
 	
-		getRepository().saveVideo(video);
-	}
-
-	Repository getRepository() {
-		return repository;
-	}
-
-	
+		repository.saveVideo(video);
+	}	
 }
