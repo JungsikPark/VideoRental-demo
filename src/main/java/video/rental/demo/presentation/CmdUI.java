@@ -3,15 +3,17 @@ package video.rental.demo.presentation;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import video.rental.demo.application.IUIObserver;
 import video.rental.demo.application.Interactor;
 
-public class CmdUI implements UI {
+public class CmdUI implements UI, IUIObserver {
 	private static Scanner scanner = new Scanner(System.in);
 
 	private Interactor interactor;
 	
 	public CmdUI(Interactor interactor) {
 		this.interactor = interactor;
+		interactor.addUIObserver(this);
 	}
 
 	@Override
@@ -52,13 +54,14 @@ public class CmdUI implements UI {
 			}
 		}
 		System.out.println("Bye");
+		interactor.removeUIObserver(this);
 	}
 
 	public void clearRentals() {
 		System.out.println("Enter customer code: ");
 		int customerCode = scanner.nextInt();
 
-		System.out.print(interactor.clearRentals(customerCode));
+		interactor.clearRentals(customerCode);
 	}
 
 	public void returnVideo() {
@@ -74,7 +77,7 @@ public class CmdUI implements UI {
 	public void listVideos() {
 		System.out.println("List of videos");
 
-		System.out.print(interactor.listVideos());
+		interactor.listVideos();
 		
 		System.out.println("End of list");
 	}
@@ -82,7 +85,7 @@ public class CmdUI implements UI {
 	public void listCustomers() {
 		System.out.println("List of customers");
 
-		System.out.print(interactor.listCustomers());
+		interactor.listCustomers();
 		
 		System.out.println("End of list");
 	}
@@ -91,7 +94,7 @@ public class CmdUI implements UI {
 		System.out.println("Enter customer code: ");
 		int code = scanner.nextInt();
 
-		System.out.println(interactor.getCustomerReposrt(code));
+		interactor.getCustomerReposrt(code);
 	}
 
 	public void rentVideo() {
@@ -151,6 +154,11 @@ public class CmdUI implements UI {
 		int command = scanner.nextInt();
 
 		return command;
+	}
+
+	@Override
+	public void update(String message) {
+		System.out.print(message);
 	}
 
 }

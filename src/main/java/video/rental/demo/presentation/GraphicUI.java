@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerListModel;
 
+import video.rental.demo.application.IUIObserver;
 import video.rental.demo.application.Interactor;
 
 import javax.swing.JSpinner;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 import java.awt.Font;
 
 @SuppressWarnings("serial")
-public class GraphicUI extends JFrame implements UI {
+public class GraphicUI extends JFrame implements UI, IUIObserver {
 
 	private JTextField userCodeField;
 	private JTextField nameField;
@@ -54,7 +55,8 @@ public class GraphicUI extends JFrame implements UI {
 	 */
 	public GraphicUI(Interactor interactor) {
 		this.interactor = interactor;
-		initialize();
+		interactor.addUIObserver(this);
+		initialize();		
 	}
 
 	/**
@@ -159,29 +161,24 @@ public class GraphicUI extends JFrame implements UI {
 	private void clearRentals()
 	{
 		int code = Integer.parseInt(userCodeField.getText().toString());
-
-		String result = interactor.clearRentals(code);
-		
-		textArea.append(result);
+		interactor.clearRentals(code);
 	}
 
 	private void getCustomerReport() {
 		int code = Integer.parseInt(userCodeField.getText().toString());
 
-		String result = interactor.getCustomerReposrt(code);
-
-		textArea.append(result);
+		interactor.getCustomerReposrt(code);		
 	}
 
 	private void listVideos() {
 		textArea.append("List of videos\n");
-		textArea.append(interactor.listVideos());
+		interactor.listVideos();
 		textArea.append("End of list\n");
 	}
 
 	private void listCustomers() {
 		textArea.append("List of customers\n");
-		textArea.append(interactor.listCustomers());
+		interactor.listCustomers();
 		textArea.append("End of list\n");
 	}
 
@@ -257,5 +254,10 @@ public class GraphicUI extends JFrame implements UI {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(x, y, w, h);
 		getContentPane().add(separator);
+	}
+
+	@Override
+	public void update(String message) {
+		textArea.append(message);
 	}
 }

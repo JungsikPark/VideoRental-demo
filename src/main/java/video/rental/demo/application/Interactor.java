@@ -12,13 +12,14 @@ import video.rental.demo.domain.Video;
 
 public class Interactor {
 	private Repository repository;
+	private List<IUIObserver> uiObservers = new ArrayList<IUIObserver>();
 	
 	public Interactor(Repository repository) {
 		super();
 		this.repository = repository;
 	}
 
-	public String clearRentals(int customerCode) {
+	public void clearRentals(int customerCode) {
 		StringBuilder builder = new StringBuilder();
 		
 		Customer foundCustomer = repository.findCustomerById(customerCode);
@@ -38,7 +39,7 @@ public class Interactor {
 			repository.saveCustomer(foundCustomer);
 		}
 		
-		return builder.toString();
+		notify(builder.toString());
 	}
 
 	public void returnVideo(int customerCode, String videoTitle) {
@@ -60,7 +61,7 @@ public class Interactor {
 		repository.saveCustomer(foundCustomer);
 	}
 
-	public String listVideos() {
+	public void listVideos() {
 		StringBuilder builder = new StringBuilder();
 		
 		List<Video> videos = repository.findAllVideos();
@@ -73,10 +74,10 @@ public class Interactor {
 					"\tTitle: " + video.getTitle() + "\n"
 					); 
 		}
-		return builder.toString();
+		notify(builder.toString());
 	}
 
-	public String listCustomers() {
+	public void listCustomers() {
 		StringBuilder builder = new StringBuilder();
 		List<Customer> customers = repository.findAllCustomers();
 	
@@ -89,10 +90,10 @@ public class Interactor {
 				builder.append("\tReturn Status: " + rental.getStatus() + "\n");
 			}
 		}
-		return builder.toString();
+		notify(builder.toString());
 	}
 
-	public String getCustomerReposrt(int code) {
+	public void getCustomerReposrt(int code) {
 		StringBuilder builder = new StringBuilder();
 		Customer foundCustomer = repository.findCustomerById(code);
 	
@@ -100,9 +101,9 @@ public class Interactor {
 			builder.append("No customer found\n");
 		} else {
 			String result = foundCustomer.getReport();
-			builder.append(result);
+			builder.append(result).append("\n");
 		}
-		return builder.toString();
+		notify(builder.toString());
 	}
 
 	public void rentVideo(int code, String videoTitle) {
@@ -142,5 +143,19 @@ public class Interactor {
 		Video video = new Video(title, videoType, priceCode, rating, registeredDate);
 	
 		repository.saveVideo(video);
-	}	
+	}
+	
+	public void addUIObserver(IUIObserver observer) {
+		uiObservers.add(observer);
+	}
+	
+	public void removeUIObserver(IUIObserver observer) {
+		uiObservers.remove(observer);
+	}
+	
+	public void notify(String message) {
+		for(IUIObserver observer : uiObservers) {
+			observer.update(message);
+		}
+	}
 }
