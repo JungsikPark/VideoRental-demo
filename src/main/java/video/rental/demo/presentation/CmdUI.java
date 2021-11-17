@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import video.rental.demo.application.Interactor;
 
-public class CmdUI {
+public class CmdUI implements UI {
 	private static Scanner scanner = new Scanner(System.in);
 
 	private Interactor interactor;
@@ -14,6 +14,7 @@ public class CmdUI {
 		this.interactor = interactor;
 	}
 
+	@Override
 	public void start() {
 		boolean quit = false;
 		while (!quit) {
@@ -90,7 +91,7 @@ public class CmdUI {
 		System.out.println("Enter customer code: ");
 		int code = scanner.nextInt();
 
-		interactor.getCustomerReposrt(code);
+		System.out.print(interactor.getCustomerReposrt(code));
 	}
 
 	public void rentVideo() {

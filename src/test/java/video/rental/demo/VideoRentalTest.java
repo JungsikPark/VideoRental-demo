@@ -17,7 +17,7 @@ public class VideoRentalTest {
 	}
 	
 	@Test
-//	@Disabled
+	//@Disabled
 	void checkRuntimeResultWithGoldenMaster() {
 		// Given (Arrange)
 		String actual = goldenMaster.getRunResult();

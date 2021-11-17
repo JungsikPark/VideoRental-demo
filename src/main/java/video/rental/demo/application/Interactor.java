@@ -24,7 +24,7 @@ public class Interactor {
 		Customer foundCustomer = getRepository().findCustomerById(customerCode);
 	
 		if (foundCustomer == null) {
-			System.out.println("No customer found");
+			builder.append("No customer found\n");
 		} else {
 			builder.append("Id: " + foundCustomer.getCode() + "\nName: " + foundCustomer.getName() + "\tRentals: "
 					+ foundCustomer.getRentals().size() + "\n");
@@ -77,29 +77,33 @@ public class Interactor {
 		return builder.toString();
 	}
 
-	public void listCustomers() {
+	public String listCustomers() {
+		StringBuilder builder = new StringBuilder();
 		List<Customer> customers = getRepository().findAllCustomers();
 	
 		for (Customer customer : customers) {
-			System.out.println("ID: " + customer.getCode() + "\nName: " + customer.getName() + "\tRentals: "
-					+ customer.getRentals().size());
+			builder.append("ID: " + customer.getCode() + "\nName: " + customer.getName() + "\tRentals: "
+					+ customer.getRentals().size() + "\n");
 			for (Rental rental : customer.getRentals()) {
-				System.out.print("\tTitle: " + rental.getVideo().getTitle() + " ");
-				System.out.print("\tPrice Code: " + rental.getVideo().getPriceCode());
-				System.out.println("\tReturn Status: " + rental.getStatus());
+				builder.append("\tTitle: " + rental.getVideo().getTitle() + " ");
+				builder.append("\tPrice Code: " + rental.getVideo().getPriceCode());
+				builder.append("\tReturn Status: " + rental.getStatus() + "\n");
 			}
 		}
+		return builder.toString();
 	}
 
-	public void getCustomerReposrt(int code) {
+	public String getCustomerReposrt(int code) {
+		StringBuilder builder = new StringBuilder();
 		Customer foundCustomer = getRepository().findCustomerById(code);
 	
 		if (foundCustomer == null) {
-			System.out.println("No customer found");
+			builder.append("No customer found\n");
 		} else {
 			String result = foundCustomer.getReport();
-			System.out.println(result);
+			builder.append(result);
 		}
+		return builder.toString();
 	}
 
 	public void rentVideo(int code, String videoTitle) {
